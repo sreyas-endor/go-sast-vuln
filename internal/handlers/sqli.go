@@ -1,55 +1,44 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
-
-	demoDB "github.com/nitesh/go-sast-vuln/internal/db"
 )
 
 // SQLiVuln builds query with untrusted input
 func SQLiVuln(w http.ResponseWriter, r *http.Request) {
-	database, err := demoDB.New()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	defer database.Close()
+	db, _ := sql.Open("sqlite3", ":memory:")
+	defer db.Close()
 
 	id := r.URL.Query().Get("id")
 	// vulnerable string concatenation
 	query := "SELECT * FROM users WHERE id = '" + id + "'"
-	_, _ = database.Query(query)
+	_, _ = db.Query(query)
 	w.WriteHeader(http.StatusOK)
 }
 
 // SQLiSafePrepared uses prepared statement
 func SQLiSafePrepared(w http.ResponseWriter, r *http.Request) {
-	database, err := demoDB.New()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	defer database.Close()
+	db, _ := sql.Open("sqlite3", ":memory:")
+	defer db.Close()
 
 	id := r.URL.Query().Get("id")
-	_, _ = demoDB.SafeGetUserByID(database, id)
+	stmt, _ := db.Prepare("SELECT * FROM users WHERE id = ?")
+	defer stmt.Close()
+	_, _ = stmt.Query(id)
 	w.WriteHeader(http.StatusOK)
 }
 
 // SQLiCrossFileFalsePositive: builds query here but validated elsewhere
 // For single-file scanners, this will look dangerous; cross-file, it's safe.
 func SQLiCrossFileFalsePositive(w http.ResponseWriter, r *http.Request) {
-	database, err := demoDB.New()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	defer database.Close()
+	db, _ := sql.Open("sqlite3", ":memory:")
+	defer db.Close()
 
 	id := r.URL.Query().Get("id")
 	query := fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", sanitizeID(id))
-	_, _ = demoDB.UnsafeQuery(database, query)
+	_, _ = db.Query(query)
 	w.WriteHeader(http.StatusOK)
 }
 
