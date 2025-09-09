@@ -4,7 +4,7 @@ import (
 	"log"
 
 	echo "github.com/labstack/echo/v4"
-	"github.com/nitesh/go-sast-vuln/internal/handlers"
+	"github.com/nztzsh/go-sast-vuln/internal/handlers"
 )
 
 func main() {

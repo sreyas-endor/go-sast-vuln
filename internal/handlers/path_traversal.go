@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nitesh/go-sast-vuln/internal/utils"
+	"github.com/nztzsh/go-sast-vuln/internal/utils"
 )
 
 const baseDir = "/tmp/safe-base"

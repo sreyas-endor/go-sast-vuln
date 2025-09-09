@@ -37,7 +37,9 @@ func SQLiCrossFileFalsePositive(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	id := r.URL.Query().Get("id")
-	query := fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", sanitizeID(id))
+	id = sanitizeID(id)
+
+	query := fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", id)
 	_, _ = db.Query(query)
 	w.WriteHeader(http.StatusOK)
 }

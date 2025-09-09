@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nitesh/go-sast-vuln/internal/handlers"
+	"github.com/nztzsh/go-sast-vuln/internal/handlers"
 )
 
 func main() {

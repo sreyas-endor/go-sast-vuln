@@ -1,4 +1,4 @@
-module github.com/nitesh/go-sast-vuln
+module github.com/nztzsh/go-sast-vuln
 
 go 1.23.0
 
