@@ -14,10 +14,12 @@ func SQLiVuln(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
-	// vulnerable string concatenation
-	query := "SELECT * FROM users WHERE id = '" + id + "'"
 	if db != nil {
-		_, _ = db.Query(query)
+		stmt, _ := db.Prepare("SELECT * FROM users WHERE id = ?")
+		if stmt != nil {
+			defer stmt.Close()
+			_, _ = stmt.Query(id)
+		}
 	}
 	w.WriteHeader(http.StatusOK)
 }
