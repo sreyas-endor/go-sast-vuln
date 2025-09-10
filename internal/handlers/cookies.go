@@ -4,9 +4,9 @@ import (
 	"net/http"
 )
 
-// CookieMissingFlags sets cookie without HttpOnly and Secure (vulnerable)
+// CookieMissingFlags sets cookie with HttpOnly and Secure flags (fixed)
 func CookieMissingFlags(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Set-Cookie", "session=abc123; Path=/")
+	w.Header().Set("Set-Cookie", "session=abc123; Path=/; HttpOnly; Secure")
 	w.WriteHeader(http.StatusOK)
 }
 
