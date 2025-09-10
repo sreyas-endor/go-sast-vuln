@@ -56,8 +56,10 @@ func main() {
 	// Intentionally missing ReadTimeout/ReadHeaderTimeout (slowloris vulnerable server)
 	// A safe server variant will be provided under a different binary.
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: mux,
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadTimeout:       1e9, // 1 second
+		ReadHeaderTimeout: 1e9, // 1 second
 	}
 
 	log.Printf("listening on %s", srv.Addr)
